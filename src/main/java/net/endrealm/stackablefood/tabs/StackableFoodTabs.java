@@ -17,6 +17,6 @@ public class StackableFoodTabs {
             .icon(() -> StackableFoodItems.EXAMPLE_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(StackableFoodItems.EXAMPLE_ITEM.get());
-                output.accept(StackableFoodItems.EXAMPLE_BLOCK_ITEM.get());
+                output.accept(StackableFoodItems.ASSEMBLY_BOARD.get());
             }).build());
 }

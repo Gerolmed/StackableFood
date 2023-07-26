@@ -13,7 +13,7 @@ public class StackableFoodItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, StackableFood.MOD_ID);
 
 
-    public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block", () -> new BlockItem(StackableFoodBlocks.EXAMPLE_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ASSEMBLY_BOARD = ITEMS.register("assembly_board", () -> new BlockItem(StackableFoodBlocks.ASSEMBLY_BOARD.get(), new Item.Properties()));
 
     // Creates a new food item with the id "examplemod:example_id", nutrition 1 and saturation 2
     public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
