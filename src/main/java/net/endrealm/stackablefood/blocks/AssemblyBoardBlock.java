@@ -1,5 +1,6 @@
 package net.endrealm.stackablefood.blocks;
 
+import net.endrealm.stackablefood.api.FoodStackRegistry;
 import net.endrealm.stackablefood.blocks.entities.AssemblyBoardBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
@@ -23,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class AssemblyBoardBlock extends Block implements EntityBlock {
 
     private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 1, 16);
+    private static final VoxelShape RENDER_SHAPE = Block.box(0, 0, 0, 16, 16, 16);
 
     public AssemblyBoardBlock() {
         super(Properties.of().mapColor(MapColor.STONE));
@@ -40,8 +43,13 @@ public class AssemblyBoardBlock extends Block implements EntityBlock {
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState pState) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
     public @NotNull InteractionResult use(@NotNull BlockState blockState, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
-        if(level.isClientSide) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
 
@@ -50,26 +58,35 @@ public class AssemblyBoardBlock extends Block implements EntityBlock {
         var itemStack = player.getMainHandItem();
         boolean emptyClick = itemStack.getItem() == Items.AIR;
         boolean sneak = player.isShiftKeyDown();
-        if(emptyClick && sneak) {
+        if (emptyClick && sneak) {
             // Remove all items
             var items = enchanter.clearAllItems();
-            for(var item : items) {
-                level.addFreshEntity(new ItemEntity(level, pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, item));
+            for (var item : items) {
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, item));
             }
-        } else if(!emptyClick) {
-            // Add an item
-            var itemAdd = itemStack.copy();
-
-            itemAdd.setCount(1);
-
-            boolean added = enchanter.addItem(itemAdd);
-
-            if(added) {
-                itemStack.setCount(itemStack.getCount() - 1);
-            }
-            return InteractionResult.CONSUME;
+            return InteractionResult.SUCCESS;
         }
 
-        return InteractionResult.SUCCESS;
+        if (emptyClick) {
+            return InteractionResult.SUCCESS;
+        }
+
+
+        if (!FoodStackRegistry.get().contains(itemStack.getItem())) {
+            return InteractionResult.SUCCESS;
+        }
+
+        // Add an item
+        var itemAdd = itemStack.copy();
+
+        itemAdd.setCount(1);
+
+        boolean added = enchanter.addItem(itemAdd);
+
+        if (added) {
+            itemStack.setCount(itemStack.getCount() - 1);
+        }
+        return InteractionResult.CONSUME;
+
     }
 }

@@ -36,7 +36,9 @@ public class AssemblyBoardBlockEntity extends BlockEntity {
         data.putInt("item_count", items.size());
 
         for (int i = 0; i < items.size(); i++) {
-            data.put("item_"+i, items.get(i).getOrCreateTag());
+            var tag = new CompoundTag();
+            items.get(i).save(tag);
+            data.put("item_"+i, tag);
 
         }
     }

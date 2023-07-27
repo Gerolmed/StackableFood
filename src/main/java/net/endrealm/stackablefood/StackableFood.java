@@ -1,12 +1,15 @@
 package net.endrealm.stackablefood;
 
 import com.mojang.logging.LogUtils;
+import net.endrealm.stackablefood.api.FoodStackRegistry;
+import net.endrealm.stackablefood.api.StaticFoodRenderer;
 import net.endrealm.stackablefood.blocks.StackableFoodBlocks;
 import net.endrealm.stackablefood.blocks.entities.StackableFoodBlockEntities;
 import net.endrealm.stackablefood.items.StackableFoodItems;
 import net.endrealm.stackablefood.tabs.StackableFoodTabs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,6 +50,9 @@ public class StackableFood {
 
         // Register the Deferred Register to the mod event bus so block entities get registered
         StackableFoodBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+
+        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.DIAMOND_HOE);
+        FoodStackRegistry.get().register(StaticFoodRenderer.BLOCK, Items.OAK_LOG);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
