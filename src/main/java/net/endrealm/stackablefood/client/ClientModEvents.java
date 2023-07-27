@@ -2,8 +2,11 @@ package net.endrealm.stackablefood.client;
 
 import com.mojang.logging.LogUtils;
 import net.endrealm.stackablefood.StackableFood;
+import net.endrealm.stackablefood.blocks.entities.StackableFoodBlockEntities;
+import net.endrealm.stackablefood.blocks.entities.renderers.AssemblyBoardBlockEntityRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -22,4 +25,12 @@ public class ClientModEvents {
         LOGGER.info("HELLO FROM CLIENT SETUP");
         LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
+
+
+    @SubscribeEvent
+    public static void onBlockEntities(EntityRenderersEvent.RegisterRenderers event) {
+
+        event.registerBlockEntityRenderer(StackableFoodBlockEntities.ASSEMBLY_BOARD.get(), (ctx) -> new AssemblyBoardBlockEntityRenderer(ctx));
+    }
+
 }
