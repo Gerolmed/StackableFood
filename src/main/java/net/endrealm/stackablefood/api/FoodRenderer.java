@@ -7,4 +7,6 @@ import net.minecraft.world.level.Level;
 
 public interface FoodRenderer {
     void render(ItemStack itemStack, PoseStack poseStack, int combinedLight, MultiBufferSource bufferSource, Level level);
+
+    float getHeightMod();
 }

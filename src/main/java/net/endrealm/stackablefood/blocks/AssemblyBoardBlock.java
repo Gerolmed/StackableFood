@@ -2,6 +2,7 @@ package net.endrealm.stackablefood.blocks;
 
 import net.endrealm.stackablefood.api.FoodStackRegistry;
 import net.endrealm.stackablefood.blocks.entities.AssemblyBoardBlockEntity;
+import net.endrealm.stackablefood.items.StackedFoodItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -53,21 +54,39 @@ public class AssemblyBoardBlock extends Block implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
 
-        var enchanter = (AssemblyBoardBlockEntity) level.getBlockEntity(pos);
+        var blockEntity = (AssemblyBoardBlockEntity) level.getBlockEntity(pos);
 
         var itemStack = player.getMainHandItem();
         boolean emptyClick = itemStack.getItem() == Items.AIR;
         boolean sneak = player.isShiftKeyDown();
+
+
+        // Clear table
         if (emptyClick && sneak) {
             // Remove all items
-            var items = enchanter.clearAllItems();
+            var items = blockEntity.clearAllItems();
             for (var item : items) {
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, item));
             }
             return InteractionResult.SUCCESS;
         }
 
+        // Take out stacked item
         if (emptyClick) {
+            if(blockEntity.getItems().isEmpty()) return InteractionResult.SUCCESS;
+            var items = blockEntity.clearAllItems();
+
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, StackedFoodItem.of(items)));
+
+
+            return InteractionResult.SUCCESS;
+        }
+
+        // Bulk place
+
+        if(itemStack.getItem() instanceof StackedFoodItem stacked) {
+            blockEntity.addItems(stacked.getItems(itemStack));
+            itemStack.setCount(itemStack.getCount() - 1);
             return InteractionResult.SUCCESS;
         }
 
@@ -81,7 +100,7 @@ public class AssemblyBoardBlock extends Block implements EntityBlock {
 
         itemAdd.setCount(1);
 
-        boolean added = enchanter.addItem(itemAdd);
+        boolean added = blockEntity.addItem(itemAdd);
 
         if (added) {
             itemStack.setCount(itemStack.getCount() - 1);

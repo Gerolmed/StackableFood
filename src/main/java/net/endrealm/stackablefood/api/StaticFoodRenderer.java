@@ -30,6 +30,11 @@ public class StaticFoodRenderer implements FoodRenderer {
         apply(poseStack, transform.getPostTranslate());
     }
 
+    @Override
+    public float getHeightMod() {
+        return transform.getPostTranslate().y;
+    }
+
     private void apply(PoseStack stack, Vector3f offset) {
         stack.translate(offset.x, offset.y, offset.z);
     }

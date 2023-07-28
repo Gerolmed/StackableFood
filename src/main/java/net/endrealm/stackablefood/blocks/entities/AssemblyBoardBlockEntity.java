@@ -85,4 +85,10 @@ public class AssemblyBoardBlockEntity extends BlockEntity {
         getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
         return old;
     }
+
+    public void addItems(List<ItemStack> items) {
+        this.items.addAll(items);
+        setChanged();
+        getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+    }
 }
