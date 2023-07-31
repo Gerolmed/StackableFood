@@ -26,10 +26,8 @@ public class AssemblyBoardBlockEntityRenderer implements BlockEntityRenderer<Ass
         poseStack.translate(.5, 1 / 16f, .5);
 
 
-        items.forEach(itemStack -> {
-            FoodStackRegistry.get().get(itemStack.getItem())
-                    .render(itemStack, poseStack, combinedLight, bufferSource, blockEntity.getLevel());
-        });
+        items.forEach(itemStack -> FoodStackRegistry.get().getSafe(itemStack.getItem())
+                .render(itemStack, poseStack, combinedLight, bufferSource, blockEntity.getLevel()));
 
 
         poseStack.popPose();

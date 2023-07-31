@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,8 +52,20 @@ public class StackableFood {
         // Register the Deferred Register to the mod event bus so block entities get registered
         StackableFoodBlockEntities.BLOCK_ENTITIES.register(modEventBus);
 
-        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.DIAMOND_HOE);
-        FoodStackRegistry.get().register(StaticFoodRenderer.BLOCK, Items.OAK_LOG);
+        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.BREAD);
+        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.CARROT);
+        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.GOLDEN_CARROT);
+        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.BEEF);
+        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.COOKED_BEEF);
+
+        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.GOLDEN_APPLE);
+        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.ENCHANTED_GOLDEN_APPLE);
+
+
+        FoodStackRegistry.get().register(StaticFoodRenderer.ITEM, Items.DIAMOND_SWORD);
+
+        FoodStackRegistry.get().register(StaticFoodRenderer.BLOCK, Items.GOLD_BLOCK);
+        FoodStackRegistry.get().register(StaticFoodRenderer.BLOCK, Items.DIAMOND_BLOCK);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -72,6 +85,14 @@ public class StackableFood {
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+    }
+
+    @SubscribeEvent
+    public void onPlayerUseItem(LivingEntityUseItemEvent.Finish event) {
+        // Check if the item used is a food item (you can customize this check to your specific food items)
+        if (event.getItem().getFoodProperties(event.getEntity()) != null) {
+            // event.setCanceled(true);
+        }
     }
 
 }

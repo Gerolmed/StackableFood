@@ -22,7 +22,7 @@ public final class RenderTransform {
     );
 
     public static final RenderTransform BLOCK_TRANSFORM = new RenderTransform(
-            new Vector3f(0, -(1 / 32f) * 1.5f, 0),
+            new Vector3f(.5f, -(1 / 32f) * 1.5f, 0),
             new Vector3f(0, 0.25f, 0),
             new Quaternionf(),
             new Vector3f(0, 0, 0)

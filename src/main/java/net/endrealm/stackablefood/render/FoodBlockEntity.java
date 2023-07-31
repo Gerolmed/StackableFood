@@ -44,7 +44,7 @@ public class FoodBlockEntity extends BlockEntityWithoutLevelRenderer {
 
         var items = ((StackedFoodItem) pStack.getItem()).getItems(pStack);
         var totalHeight = new AtomicDouble(0);
-        items.forEach(itemStack -> totalHeight.addAndGet(FoodStackRegistry.get().get(itemStack.getItem()).getHeightMod()));
+        items.forEach(itemStack -> totalHeight.addAndGet(FoodStackRegistry.get().getSafe(itemStack.getItem()).getHeightMod()));
         var scale = Math.min(1 / (float)totalHeight.get(), 1);
 
         poseStack.pushPose();
@@ -71,7 +71,7 @@ public class FoodBlockEntity extends BlockEntityWithoutLevelRenderer {
 
 
         items.forEach(itemStack -> {
-            FoodStackRegistry.get().get(itemStack.getItem())
+            FoodStackRegistry.get().getSafe(itemStack.getItem())
                     .render(itemStack, poseStack, pPackedLight, pBuffer, null);
         });
 

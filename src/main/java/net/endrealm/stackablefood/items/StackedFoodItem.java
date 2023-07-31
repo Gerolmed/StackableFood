@@ -3,15 +3,18 @@ package net.endrealm.stackablefood.items;
 import net.endrealm.stackablefood.render.FoodBlockEntity;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class StackedFoodItem extends Item {
@@ -68,5 +71,36 @@ public class StackedFoodItem extends Item {
         tagData.put("stack_data", stackData);
 
         return stack;
+    }
+
+
+    @Override
+    public int getUseDuration(ItemStack stack) {
+
+        var content = getItems(stack);
+        var duration = 0;
+
+        for (ItemStack itemStack : content) {
+            duration += Math.max(itemStack.getUseDuration(), 1);
+        }
+
+        return duration/content.size();
+    }
+
+    @Override
+    public @Nullable FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
+        var builder = new FoodProperties.Builder();
+
+        var content = getItems(stack);
+        AtomicInteger nut = new AtomicInteger();
+
+        content.stream().filter(itemStack -> itemStack.getFoodProperties(entity) != null).forEach(itemStack -> {
+            var foodProps = itemStack.getFoodProperties(entity);
+            assert foodProps != null;
+            nut.addAndGet(foodProps.getNutrition());
+            foodProps.getEffects().forEach(pair -> builder.effect(pair::getFirst, pair.getSecond()));
+        });
+        builder.nutrition(nut.get());
+        return builder.build();
     }
 }
